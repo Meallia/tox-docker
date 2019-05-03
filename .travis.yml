@@ -9,9 +9,7 @@ python:
     - "3.7"
     - "3.8-dev"
     - "nightly"
-env:
-    - TOX_VERSION="tox-2.x"
-    - TOX_VERSION="tox-3.x"
 install:
-    - pip install --constraint "$TOX_VERSION" .
-script: "tox"
+    - pip install .
+script:
+    - tox

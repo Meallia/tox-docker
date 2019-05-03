@@ -109,7 +109,7 @@ def tox_runtest_pre(venv):
             while (time.time() - start) < 30:
                 try:
                     sock = socket.create_connection(
-                        address=(gateway_ip, int(hostport)),
+                        address=(gateway_ip, int(containerport)),
                         timeout=0.1,
                     )
                 except socket.error:

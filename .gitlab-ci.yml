@@ -1,0 +1,32 @@
+variables:
+  PIP_INDEX_URL: https://artifactory-iva.si.francetelecom.fr/artifactory/api/pypi/python-virt-orange-product-devops/simple
+  PIP_TRUSTED_HOST: artifactory-iva.si.francetelecom.fr
+  DOCKER_PROXY: dockerproxy-iva.si.francetelecom.fr
+  HTTP_PROXY:  http://devwatt-proxy.si.fr.intraorange:8080
+  HTTPS_PROXY: http://devwatt-proxy.si.fr.intraorange:8080
+  NO_PROXY: francetelecom.fr,orange-labs.fr
+
+stages:
+  - test
+
+
+.test:
+  services:
+    - name: $DOCKER_PROXY/docker:dind
+      alias: docker
+  stage: test
+  tags:
+    - docker
+    - rsc
+    - devwatt
+  image: $DOCKER_PROXY/python:3.7
+  before_script:
+    - export DOCKER_HOST=${DOCKER_PORT_2375_TCP}
+    - export SERVICES_HOST=${DOCKER_PORT_2375_TCP_ADDR}
+    - export NO_PROXY=${NO_PROXY},${SERVICES_HOST}
+    - pip install -q tox .
+
+pytest:
+  extends: .test
+  script:
+    tox
